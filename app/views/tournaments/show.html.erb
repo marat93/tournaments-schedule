@@ -1,0 +1,21 @@
+<h3><%= @tournament.name %></h3>
+
+<h2><%= TeamTournament::DIVISION_A.humanize %></h2>
+<ul>
+  <% @division_a_teams.each do |team| %>
+    <li class="<%= "won-team" if @division_a_winners.include?(team) %>"><%= team.name %></li>
+  <% end %>
+</ul>
+
+<h2><%= TeamTournament::DIVISION_B.humanize %></h2>
+<ul>
+  <% @division_b_teams.each do |team| %>
+    <li class="<%= "won-team" if @division_b_winners.include?(team) %>"><%= team.name %></li>
+  <% end %>
+</ul>
+
+<% if @division_a_winners.blank? && @division_b_winners.blank? %>
+  <%= button_to "Generate division results", tournament_generate_division_results_path(@tournament), method: :post %>
+<% end %>
+
+
