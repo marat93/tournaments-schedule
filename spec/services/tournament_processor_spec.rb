@@ -1,6 +1,21 @@
 require "rails_helper"
 
 RSpec.describe TournamentProcessor do
+  let (:tournament) { create :tournament, :with_teams }
+
+  describe "#playoff!" do
+    let(:num_of_unique_plays) { Play.select(:winner, :round).where.not(round: [TeamTournament::DIVISION_A, TeamTournament::DIVISION_B]).distinct.to_a.count }
+
+    it "generate plays between teams in single-elimination manner" do
+      processor = TournamentProcessor.new(tournament)
+      processor.play_division_games!
+
+      processor.playoff!
+
+      expect(num_of_unique_plays).to eq(7)
+    end
+  end
+
   describe "#play_division_games!" do
     let(:num_of_unique_plays_in_division_a) { num_of_unique_plays(round: TeamTournament::DIVISION_A) }
     let(:num_of_unique_plays_in_division_b) { num_of_unique_plays(round: TeamTournament::DIVISION_B) }

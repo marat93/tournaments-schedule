@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181016150326) do
+ActiveRecord::Schema.define(version: 20181016231145) do
 
   create_table "plays", force: :cascade do |t|
     t.integer  "tournament_id"
@@ -26,8 +26,9 @@ ActiveRecord::Schema.define(version: 20181016150326) do
     t.integer  "team_id"
     t.integer  "tournament_id"
     t.string   "division"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "division_winner", default: false, null: false
     t.index ["team_id"], name: "index_team_tournaments_on_team_id"
     t.index ["tournament_id"], name: "index_team_tournaments_on_tournament_id"
   end
