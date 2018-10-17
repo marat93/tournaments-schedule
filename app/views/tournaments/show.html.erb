@@ -1,21 +1,67 @@
-<h3><%= @tournament.name %></h3>
+<h3><%= link_to 'All tournaments', tournaments_path %> > <%= @tournament.name %></h3>
 
-<h2><%= TeamTournament::DIVISION_A.humanize %></h2>
-<ul>
-  <% @division_a_teams.each do |team| %>
-    <li class="<%= "won-team" if @division_a_winners.include?(team) %>"><%= team.name %></li>
+<div class="division-tables">
+  <div class="division-table">
+    <h2><%= TeamTournament::DIVISION_A.humanize %></h2>
+    <ul>
+      <% @division_a_teams.each do |team| %>
+        <li class="<%= "won-team" if @division_a_winners.include?(team) %>"><%= team.name %></li>
+      <% end %>
+    </ul>
+
+    <h2><%= TeamTournament::DIVISION_B.humanize %></h2>
+    <ul>
+      <% @division_b_teams.each do |team| %>
+        <li class="<%= "won-team" if @division_b_winners.include?(team) %>"><%= team.name %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <% if @playoff_first_round.present? %>
+    <div class="division-table">
+      <h2><%= Play::ONE_FOURTH.humanize %></h2>
+      <% @playoff_first_round.each do |play| %>
+        <ul>
+          <li class="<%= "won-team" if play.winner?(play.team_a) %>"><%= play.team_a.name %></li>
+          <li class="<%= "won-team" if play.winner?(play.team_b) %>"><%= play.team_b.name %></li>
+        </ul>
+      <% end %>
+    </div>
   <% end %>
-</ul>
 
-<h2><%= TeamTournament::DIVISION_B.humanize %></h2>
-<ul>
-  <% @division_b_teams.each do |team| %>
-    <li class="<%= "won-team" if @division_b_winners.include?(team) %>"><%= team.name %></li>
+  <% if @playoff_second_round.present? %>
+    <div class="division-table">
+      <h2><%= Play::ONE_HALF.humanize %></h2>
+      <% @playoff_second_round.each do |play| %>
+        <ul>
+          <li class="<%= "won-team" if play.winner?(play.team_a) %>"><%= play.team_a.name %></li>
+          <li class="<%= "won-team" if play.winner?(play.team_b) %>"><%= play.team_b.name %></li>
+        </ul>
+      <% end %>
+    </div>
   <% end %>
-</ul>
 
-<% if @division_a_winners.blank? && @division_b_winners.blank? %>
-  <%= button_to "Generate division results", tournament_generate_division_results_path(@tournament), method: :post %>
-<% end %>
+  <% if @playoff_final_round.present? %>
+    <div class="division-table">
+      <h2><%= Play::FINAL.humanize %></h2>
+      <% @playoff_final_round.each do |play| %>
+        <ul>
+          <li class="<%= "won-team" if play.winner?(play.team_a) %>"><%= play.team_a.name %></li>
+          <li class="<%= "won-team" if play.winner?(play.team_b) %>"><%= play.team_b.name %></li>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
 
-
+<div class="generator-buttons">
+  <% if @division_a_winners.blank? || @division_b_winners.blank? %>
+    <div class="generator-button">
+      <%= button_to "Generate division results", tournament_generate_division_results_path(@tournament), method: :post %>
+    </div>
+  <% elsif @playoff_first_round.blank? || @playoff_second_round.blank? || @playoff_final_round.blank? %>
+    <div class="generator-button">
+      <%= button_to "Generate playoff results", tournament_generate_playoff_results_path(@tournament), method: :post %>
+    </div>
+  <% end %>
+</div>

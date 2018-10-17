@@ -25,9 +25,9 @@ class TournamentProcessor
         winners = schedule.map do |teams|
           Play.create(
             tournament: tournament,
-            round:      ['1/4', '1/2', 'final'][round],
-            team_a:     teams.first,
-            team_b:     teams.second,
+            round:      Play::ROUND_NAMES[round],
+            team_a_id:  teams.first,
+            team_b_id:  teams.second,
             winner:     teams.sample
           ).winner
         end
@@ -44,8 +44,8 @@ class TournamentProcessor
       Play.create(
         tournament: tournament,
         round:      division_name,
-        team_a:     teams_pair.first,
-        team_b:     teams_pair.second,
+        team_a_id:  teams_pair.first,
+        team_b_id:  teams_pair.second,
         winner:     teams_pair.sample
       )
     end

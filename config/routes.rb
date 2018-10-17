@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "/", to: "tournaments#index"
 
   resources :tournaments do
+    post :generate_playoff_results
     post :generate_division_results
   end
 end

@@ -4,7 +4,7 @@ RSpec.describe TournamentProcessor do
   let (:tournament) { create :tournament, :with_teams }
 
   describe "#playoff!" do
-    let(:num_of_unique_plays) { Play.select(:winner, :round).where.not(round: [TeamTournament::DIVISION_A, TeamTournament::DIVISION_B]).distinct.to_a.count }
+    let(:num_of_unique_plays) { Play.select(:winner, :round).playoff.distinct.to_a.count }
 
     it "generate plays between teams in single-elimination manner" do
       processor = TournamentProcessor.new(tournament)
@@ -30,7 +30,7 @@ RSpec.describe TournamentProcessor do
     end
 
     def num_of_unique_plays(round:)
-      Play.select(:team_a, :team_b)
+      Play.select(:team_a_id, :team_b_id)
         .where(tournament: tournament, round: round)
         .distinct
         .to_a.count

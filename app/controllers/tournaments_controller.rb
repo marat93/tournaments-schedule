@@ -23,10 +23,15 @@ class TournamentsController < ApplicationController
 
   def show
     @tournament = Tournament.find(params[:id])
+
     @division_a_teams   = @tournament.teams.division(TeamTournament::DIVISION_A).order('division_winner DESC')
     @division_b_teams   = @tournament.teams.division(TeamTournament::DIVISION_B).order('division_winner DESC')
     @division_a_winners = @tournament.teams.division_winners(TeamTournament::DIVISION_A)
     @division_b_winners = @tournament.teams.division_winners(TeamTournament::DIVISION_B)
+
+    @playoff_first_round  = Play.where(tournament: @tournament).playoff_first_round
+    @playoff_second_round = Play.where(tournament: @tournament).playoff_second_round
+    @playoff_final_round  = Play.where(tournament: @tournament).playoff_final_round
   end
 
   def generate_division_results
@@ -34,6 +39,15 @@ class TournamentsController < ApplicationController
 
     processor = TournamentProcessor.new(@tournament)
     processor.play_division_games!
+
+    redirect_to tournament_path(params[:tournament_id])
+  end
+
+  def generate_playoff_results
+    @tournament = Tournament.find(params[:tournament_id])
+
+    processor = TournamentProcessor.new(@tournament)
+    processor.playoff!
 
     redirect_to tournament_path(params[:tournament_id])
   end
