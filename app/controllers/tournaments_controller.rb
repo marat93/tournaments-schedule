@@ -51,4 +51,10 @@ class TournamentsController < ApplicationController
 
     redirect_to tournament_path(params[:tournament_id])
   end
+
+  def reset_database
+    Tournament.destroy_all
+
+    redirect_to tournaments_path
+  end
 end

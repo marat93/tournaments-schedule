@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   resources :tournaments do
     post :generate_playoff_results
     post :generate_division_results
+    post :reset_database, on: :collection
   end
 end
